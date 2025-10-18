@@ -1,0 +1,18 @@
+{
+  "name": "pi",
+  "version": "1.0.0",
+  "description": "server calculate Pi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Naluri-Pi"
+  },
+  "author": "Sherly",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
