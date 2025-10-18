@@ -1,15 +1,15 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import {
 	Text,
 	View,
-	Image,
+	Animated,
+	Easing,
 	Dimensions,
 	ViewStyle,
 	TextStyle,
 	ImageStyle,
 } from "react-native";
 import axios from "axios";
-import Sun from "../assets/images/sun.png";
 
 interface PiResponse {
 	pi: string;
@@ -20,9 +20,28 @@ const {width} = Dimensions.get("window");
 export default function Index() {
 	const [pi, setPi] = useState<number | null>(3.14); // using default value of 3.14 for pi
 
+	const spinAnimation = useRef(new Animated.Value(0)).current;
+
 	useEffect(() => {
-		fetchData();
-	}, []);
+		const animate = () => {
+			spinAnimation.setValue(0);
+			Animated.timing(spinAnimation, {
+				toValue: 1,
+				duration: 10000,
+				useNativeDriver: true,
+				easing: Easing.linear,
+			}).start(({finished}) => {
+				if (finished) animate();
+			});
+		};
+		animate();
+		fetchData(); // get pi value everytime sun spinning
+	}, [spinAnimation]);
+
+	const spin = spinAnimation.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
+	});
 
 	const fetchData = async () => {
 		try {
@@ -33,20 +52,21 @@ export default function Index() {
 		}
 	};
 
-	const calculateCircumference = async (radius: number, pi: number | null) => {
-		return pi ? 2 * pi * radius : null;
-	};
+	const radius = 695700;
+	const circumference = pi !== null ? 2 * pi * radius : 0;
 
 	return (
 		<View style={$container}>
 			<View style={$textContainer}>
 				<Text style={$text}>
-					Did you know that our sun's circumference is{" "}
-					{calculateCircumference(695700, pi)} km?
+					Did you know that our sun's circumference is {circumference} km?
 				</Text>
 			</View>
 			<View style={$imageContainer}>
-				<Image source={Sun} style={$sun} />
+				<Animated.Image
+					source={require("../assets/images/sun.png")}
+					style={[$sun, {transform: [{rotate: spin}]}]}
+				/>
 			</View>
 		</View>
 	);
