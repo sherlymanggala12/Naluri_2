@@ -39,28 +39,46 @@ export default function Index() {
 
 	return (
 		<View style={$container}>
-			<Text style={$text}>
-				Did you know that our sun's circumference is{" "}
-				{calculateCircumference(695700, pi)} km?
-			</Text>
-			<Image source={Sun} style={$sun} />
+			<View style={$textContainer}>
+				<Text style={$text}>
+					Did you know that our sun's circumference is{" "}
+					{calculateCircumference(695700, pi)} km?
+				</Text>
+			</View>
+			<View style={$imageContainer}>
+				<Image source={Sun} style={$sun} />
+			</View>
 		</View>
 	);
 }
 
 const $container: ViewStyle = {
-	flex: 1,
+	flex: 2,
 	justifyContent: "center",
 	alignItems: "center",
 	backgroundColor: "#00111a",
 	flexDirection: width > 768 ? "row" : "column",
 	overflow: "hidden",
-  padding: 20
+	padding: 20,
+};
+
+const $textContainer: ViewStyle = {
+	flex: width > 768 ? 1 : 0.5,
+	justifyContent: "flex-end",
+	alignItems: "flex-end",
 };
 
 const $text: TextStyle = {
 	fontFamily: "'Nunito Sans', sans-serif",
 	color: "#ffffff",
+	fontSize: width > 768 ? 24 : 18,
+	textAlign: "center",
+};
+
+const $imageContainer: ViewStyle = {
+	flex: width > 768 ? 1 : 1.5,
+	justifyContent: "flex-start",
+	alignItems: "flex-start",
 };
 
 const $sun: ImageStyle = {
