@@ -18,7 +18,7 @@ redis.on("error", (err) => console.error("Redis error:", err));
 
   // Using Nilakantha formula to calculate Pi
   function calculatePi(iterations) {
-    Decimal.set({ precision: 200 });
+    Decimal.set({ precision: 5000 });
     let pi = new Decimal(3);
     let x = 1;
 
