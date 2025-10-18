@@ -1,6 +1,14 @@
 import {useState, useEffect} from "react";
-import {Text, View, ViewStyle, TextStyle} from "react-native";
+import {
+	Text,
+	View,
+	Image,
+	ViewStyle,
+	TextStyle,
+	ImageStyle,
+} from "react-native";
 import axios from "axios";
+import Sun from "../assets/images/sun.png";
 
 interface PiResponse {
 	pi: string;
@@ -8,6 +16,7 @@ interface PiResponse {
 
 export default function Index() {
 	const [pi, setPi] = useState<number | null>(3.14); // using default value of 3.14 for pi
+
 	useEffect(() => {
 		fetchData();
 	}, []);
@@ -30,9 +39,15 @@ export default function Index() {
 
 	return (
 		<View style={$container}>
-			<Text style={$text}>
-				Did you know that our sun's circumference is {calculateCircumference(695700, pi)} km?
-			</Text>
+			<View>
+				<Image source={Sun} style={$sun} />
+			</View>
+			<View>
+				<Text style={$text}>
+					Did you know that our sun's circumference is{" "}
+					{calculateCircumference(695700, pi)} km?
+				</Text>
+			</View>
 		</View>
 	);
 }
@@ -42,9 +57,16 @@ const $container: ViewStyle = {
 	justifyContent: "center",
 	alignItems: "center",
 	backgroundColor: "#00111a",
+  flexDirection: 'row',
 };
 
 const $text: TextStyle = {
 	fontFamily: "'Nunito Sans', sans-serif",
 	color: "#ffffff",
+};
+
+const $sun: ImageStyle = {
+	width: 200,
+	height: 200,
+	marginRight: 20,
 };
