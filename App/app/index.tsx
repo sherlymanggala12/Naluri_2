@@ -63,7 +63,8 @@ export default function Index() {
 		<View style={$container}>
 			<View style={$textContainer}>
 				<Text style={$text}>
-					Did you know that our sun's circumference is {calculateCircumference()} km?
+					With our latest calculation of <br/>pi = {pi},<br /><br />
+          did you know that our sun's circumference is {calculateCircumference()} km?
 				</Text>
 			</View>
 			<View style={$imageContainer}>
@@ -83,7 +84,7 @@ const $container: ViewStyle = {
 	backgroundColor: "#00111a",
 	flexDirection: width > 768 ? "row" : "column",
 	overflow: "hidden",
-	padding: 20,
+	padding: 30,
 };
 
 const $textContainer: ViewStyle = {
