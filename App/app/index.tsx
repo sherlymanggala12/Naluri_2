@@ -3,6 +3,7 @@ import {
 	Text,
 	View,
 	Image,
+	Dimensions,
 	ViewStyle,
 	TextStyle,
 	ImageStyle,
@@ -13,6 +14,8 @@ import Sun from "../assets/images/sun.png";
 interface PiResponse {
 	pi: string;
 }
+
+const {width} = Dimensions.get("window");
 
 export default function Index() {
 	const [pi, setPi] = useState<number | null>(3.14); // using default value of 3.14 for pi
@@ -31,23 +34,16 @@ export default function Index() {
 	};
 
 	const calculateCircumference = async (radius: number, pi: number | null) => {
-		if (pi === null) {
-			throw new Error("Pi is not available");
-		}
-		return 2 * pi * radius;
+		return pi ? 2 * pi * radius : null;
 	};
 
 	return (
 		<View style={$container}>
-			<View>
-				<Image source={Sun} style={$sun} />
-			</View>
-			<View>
-				<Text style={$text}>
-					Did you know that our sun's circumference is{" "}
-					{calculateCircumference(695700, pi)} km?
-				</Text>
-			</View>
+			<Text style={$text}>
+				Did you know that our sun's circumference is{" "}
+				{calculateCircumference(695700, pi)} km?
+			</Text>
+			<Image source={Sun} style={$sun} />
 		</View>
 	);
 }
@@ -57,7 +53,9 @@ const $container: ViewStyle = {
 	justifyContent: "center",
 	alignItems: "center",
 	backgroundColor: "#00111a",
-  flexDirection: 'row',
+	flexDirection: width > 768 ? "row" : "column",
+	overflow: "hidden",
+  padding: 20
 };
 
 const $text: TextStyle = {
@@ -66,7 +64,7 @@ const $text: TextStyle = {
 };
 
 const $sun: ImageStyle = {
-	width: 200,
-	height: 200,
-	marginRight: 20,
+	width: width * (width > 768 ? 0.3 : 0.5),
+	height: width * (width > 768 ? 0.3 : 0.5),
+	...(width > 768 ? {marginLeft: 20} : {marginTop: 20}),
 };
