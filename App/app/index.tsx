@@ -1,28 +1,38 @@
 import {useState, useEffect} from "react";
-import {
-	Text,
-	View,
-	ViewStyle,
-	TextStyle
-} from "react-native";
+import {Text, View, ViewStyle, TextStyle} from "react-native";
 import axios from "axios";
 
+interface PiResponse {
+	pi: string;
+}
+
 export default function Index() {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/pi');
-        console.log("Fetched data:", response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-    fetchData();
-  }, []);
+	const [pi, setPi] = useState<number | null>(3.14); // using default value of 3.14 for pi
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	const fetchData = async () => {
+		try {
+			const response = await axios.get<PiResponse>("http://localhost:3000/pi");
+			setPi(parseFloat(response.data.pi));
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
+
+	const calculateCircumference = async (radius: number, pi: number | null) => {
+		if (pi === null) {
+			throw new Error("Pi is not available");
+		}
+		return 2 * pi * radius;
+	};
 
 	return (
 		<View style={$container}>
-			<Text style={$text}>Did you know that our sun's circumference is</Text>
+			<Text style={$text}>
+				Did you know that our sun's circumference is {calculateCircumference(695700, pi)} km?
+			</Text>
 		</View>
 	);
 }
