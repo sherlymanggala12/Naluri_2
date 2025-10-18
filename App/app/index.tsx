@@ -30,12 +30,14 @@ export default function Index() {
 				duration: 10000,
 				useNativeDriver: true,
 				easing: Easing.linear,
-			}).start(({finished}) => {
-				if (finished) animate();
+			}).start(({ finished }) => {
+				if (finished) {
+					fetchData();
+					animate();
+				}
 			});
 		};
 		animate();
-		fetchData(); // get pi value everytime sun spinning
 	}, [spinAnimation]);
 
 	const spin = spinAnimation.interpolate({
@@ -52,14 +54,16 @@ export default function Index() {
 		}
 	};
 
-	const radius = 695700;
-	const circumference = pi !== null ? 2 * pi * radius : 0;
+	const calculateCircumference = () => {
+		const radius = 695700;
+		return pi ? 2 * pi * radius : 0;
+	};
 
 	return (
 		<View style={$container}>
 			<View style={$textContainer}>
 				<Text style={$text}>
-					Did you know that our sun's circumference is {circumference} km?
+					Did you know that our sun's circumference is {calculateCircumference()} km?
 				</Text>
 			</View>
 			<View style={$imageContainer}>
