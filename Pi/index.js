@@ -1,9 +1,12 @@
 const express = require("express");
+const cors = require("cors");
 const { createClient } = require("redis");
 const Decimal = require("decimal.js");
 
 const app = express();
 const port = 3000;
+
+app.use(cors());
 
 // Connect to Redis
 const redis = createClient({ url: "redis://127.0.0.1:6379" }); // Redis port 6379
@@ -38,6 +41,7 @@ redis.on("error", (err) => console.error("Redis error:", err));
 
     res.json({
       pi: pi.toString(),
+      // pi: "test"
     });
   });
 
