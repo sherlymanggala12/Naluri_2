@@ -5,6 +5,7 @@ import {
 	Animated,
 	Easing,
 	Dimensions,
+	ScrollView,
 	ViewStyle,
 	TextStyle,
 	ImageStyle,
@@ -29,9 +30,11 @@ const generateStars = (count = 50) => {
 
 export default function Index() {
 	const [pi, setPi] = useState<number | null>(3.14);
+	const [piString, setPiString] = useState<string>("3.14");
 	const spinAnimation = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
+		fetchData();
 		const animate = () => {
 			spinAnimation.setValue(0);
 			Animated.timing(spinAnimation, {
@@ -39,9 +42,8 @@ export default function Index() {
 				duration: 10000,
 				useNativeDriver: true,
 				easing: Easing.linear,
-			}).start(({ finished }) => {
+			}).start(({finished}) => {
 				if (finished) {
-					fetchData();
 					animate();
 				}
 			});
@@ -81,6 +83,7 @@ export default function Index() {
 	const fetchData = async () => {
 		try {
 			const response = await axios.get<PiResponse>("http://localhost:3000/pi");
+			setPiString(response.data.pi);
 			setPi(parseFloat(response.data.pi));
 		} catch (error) {
 			console.error("Error fetching data:", error);
@@ -115,12 +118,26 @@ export default function Index() {
 				/>
 			))}
 			<View style={$textContainer}>
-				<Text style={$text}>
-					With our latest calculation of {"\n"}
-					<Text style={$textOrange}>pi = {pi}</Text>,{"\n\n"}
-					did you know that our sun's circumference is {"\n"}
-					<Text style={$textOrange}>{calculateCircumference()} km</Text>?
-				</Text>
+				<View style={$textWrapper}>
+					<Text style={$text}>With our latest calculation of</Text>
+					<View style={$piContainer}>
+						<Text style={$textOrange}>π = </Text>
+						<ScrollView
+							horizontal
+							showsHorizontalScrollIndicator
+							style={$piScrollView}
+							contentContainerStyle={$piScrollContent}
+						>
+							<Text style={$textOrange}>{piString}</Text>
+						</ScrollView>
+					</View>
+				</View>
+				<View style={$textWrapper}>
+					<Text style={$text}>
+						did you know that our sun's circumference is{"\n"}
+					</Text>
+					<Text style={$textOrange}>{calculateCircumference()} km?</Text>
+				</View>
 			</View>
 
 			<View style={$imageContainer}>
@@ -139,15 +156,20 @@ const $container: ViewStyle = {
 	alignItems: "center",
 	flexDirection: width > 768 ? "row" : "column",
 	overflow: "hidden",
-	padding: width * 0.2,
+	padding: width * 0.15,
 };
 
 const $textContainer: ViewStyle = {
 	flex: width > 768 ? 1 : 0.5,
-	justifyContent: "flex-end",
-	alignItems: "flex-end",
+	justifyContent: "center",
+	alignItems: "center",
 	zIndex: 2,
 };
+
+const $textWrapper: ViewStyle = {
+  marginTop: 10,
+  alignItems: "center",
+}
 
 const $text: TextStyle = {
 	fontFamily: "Lato, sans-serif",
@@ -159,6 +181,26 @@ const $text: TextStyle = {
 const $textOrange: TextStyle = {
 	color: "#FFA500",
 	fontSize: width > 768 ? 28 : 22,
+	marginTop: 5,
+};
+
+const $piContainer: ViewStyle = {
+	flex: 1,
+	flexDirection: "row",
+	alignItems: "flex-start",
+	justifyContent: "flex-start",
+	marginVertical: 10,
+};
+
+const $piScrollView: ViewStyle = {
+	width: width * 0.5,
+	maxWidth: 250,
+	marginBottom: 30,
+};
+
+const $piScrollContent: ViewStyle = {
+	alignItems: "center",
+	paddingHorizontal: 10,
 };
 
 const $imageContainer: ViewStyle = {
